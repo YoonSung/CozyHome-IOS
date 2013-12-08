@@ -11,7 +11,7 @@
 @interface RBLoginModel : NSObject
 -(void)saveID:(NSString*)userid withPassword:(NSString*)password withNickName:(NSString*)nickName;
 - (NSString*)loginDataDescription;
-
++ (RBLoginModel*)getInstance;
 
 - (BOOL)isValidLoginID:(NSString*)inputID AndPassword:(NSString*)inputPW;
 @end

@@ -26,7 +26,7 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTap:)];
     [self.view addGestureRecognizer:tap];
     //**************
-    loginModel = [[RBLoginModel alloc]init];
+    loginModel = [RBLoginModel getInstance];
 }
 
     //for keyboard hidden in login process
@@ -48,17 +48,8 @@
     //[self performSegueWithIdentifier:@"moveList" sender:self];
 }
 
-
-- (IBAction)pressLoginBtn:(id)sender
+- (BOOL)loginCheck
 {
-
-}
-
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
-{
-    //NSLog(@"%@",[loginModel loginDataDescription]);
-    //NSLog(@"%hhd",[loginModel isValidLoginID:self.inputID.text AndPassword:self.inputPW.text]);
-    
     if ( [loginModel isValidLoginID:self.inputID.text AndPassword:self.inputPW.text] )
     {
         return true;
@@ -69,10 +60,18 @@
         [alert show];
         return false;
     }
-
 }
 
-- (IBAction)pressJoinBtn:(id)sender {
-    [loginModel saveID:self.inputID.text withPassword:self.inputPW.text withNickName:@"GGuydori"];
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
+{
+    if ([identifier isEqualToString:@"Login"]) {
+        return [self loginCheck];
+    }
+    return true;
+}
+
+-(IBAction)returned:(UIStoryboardSegue*)segue
+{
+    NSLog(@"return");
 }
 @end

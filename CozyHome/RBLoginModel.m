@@ -15,7 +15,9 @@
 @implementation RBLoginModel
 {
     NSMutableDictionary* _loginModel;
+    
 }
+static RBLoginModel* sharedInstance;
 
 - (id)init
 {
@@ -24,6 +26,13 @@
         _loginModel = [[NSMutableDictionary alloc] initWithCapacity:3];
     }
     return self;
+}
+
++ (RBLoginModel*)getInstance
+{
+    if ( sharedInstance == nil )
+        sharedInstance = [[super alloc] init];
+    return sharedInstance;
 }
 
 - (void)saveID:(NSString*)userid withPassword:(NSString*)password withNickName:(NSString*)nickName
