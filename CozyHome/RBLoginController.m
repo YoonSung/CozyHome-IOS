@@ -7,7 +7,7 @@
 //
 
 #import "RBLoginController.h"
-#import "RBLoginModel.h"
+#import "RBDataModel.h"
 
 @interface RBViewController ()
 
@@ -15,7 +15,7 @@
 
 @implementation RBViewController
 {
-    RBLoginModel* loginModel;
+    RBDataModel* loginModel;
 }
 - (void)viewDidLoad
 {
@@ -26,7 +26,7 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTap:)];
     [self.view addGestureRecognizer:tap];
     //**************
-    loginModel = [RBLoginModel getInstance];
+    loginModel = [RBDataModel getInstance];
 }
 
     //for keyboard hidden in login process

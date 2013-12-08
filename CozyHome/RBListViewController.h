@@ -8,6 +8,5 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RBListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
-
+@interface RBListViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate>
 @end

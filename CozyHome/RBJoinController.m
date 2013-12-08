@@ -7,11 +7,11 @@
 //
 
 #import "RBJoinController.h"
-#import "RBLoginModel.h"
+#import "RBDataModel.h"
 
 @implementation RBJoinController
 {
-    RBLoginModel* loginModel;
+    RBDataModel* loginModel;
 }
 
 - (IBAction)pressJoinBtn:(id)sender {
@@ -29,7 +29,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    loginModel = [RBLoginModel getInstance];
+    loginModel = [RBDataModel getInstance];
     
     
     _email.delegate = self;

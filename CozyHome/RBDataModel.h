@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@interface RBLoginModel : NSObject
--(void)saveID:(NSString*)userid withPassword:(NSString*)password withNickName:(NSString*)nickName;
+@interface RBDataModel : NSObject
+- (void)saveID:(NSString*)userid withPassword:(NSString*)password withNickName:(NSString*)nickName;
 - (NSString*)loginDataDescription;
-+ (RBLoginModel*)getInstance;
-
++ (RBDataModel*)getInstance;
+- (NSUInteger)getListSize;
 - (BOOL)isValidLoginID:(NSString*)inputID AndPassword:(NSString*)inputPW;
+- (NSDictionary*)getListDataAtIndex:(NSUInteger)index;
 @end

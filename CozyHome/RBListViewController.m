@@ -7,14 +7,14 @@
 //
 
 #import "RBListViewController.h"
-
+#import "RBDataModel.h"
 @interface RBListViewController ()
 
 @end
 
 @implementation RBListViewController
 {
-    
+    RBDataModel* _model;
 }
 
 
@@ -31,6 +31,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    _model = [RBDataModel getInstance];
+    NSLog(@"viewDidLoad in RBListViewController");
 }
 
 - (void)didReceiveMemoryWarning
@@ -42,13 +44,21 @@
 #pragma mark - DataSource
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+    NSLog(@"length : %d",[_model getListSize]);
+    return [_model getListSize];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    NSMutableDictionary* item =
-    return nil;
+    NSLog(@"cellForRowAtIndexPath Execute");
+    
+    NSDictionary* item = [_model getListDataAtIndex:indexPath.row];
+    UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
+
+    cell.textLabel.text = [item objectForKey:@"title"];
+    cell.detailTextLabel.text = [item objectForKey:@"content"];
+    cell.imageView.image = [UIImage imageNamed: [item objectForKey:@"image"]];
+    return cell;
 }
 
 @end
