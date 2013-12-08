@@ -12,4 +12,5 @@
 @property (weak, nonatomic) IBOutlet UITextField *inputID;
 @property (weak, nonatomic) IBOutlet UITextField *inputPW;
 - (IBAction)pressLoginBtn:(id)sender;
+- (IBAction)pressJoinBtn:(id)sender;
 @end
