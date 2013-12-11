@@ -44,9 +44,10 @@ static RBDataModel* sharedInstance;
 - (void)getBoardDataFromServer
 {
     _responseData = [[NSMutableData alloc] initWithCapacity:10];
-    NSString *aURLString = @"http://1.234.2.8/board.php";
+    NSString *aURLString = @"http://localhost:3080/board/list.json";//@"http://1.234.2.8/board.php";
     NSURL* aURL = [NSURL URLWithString:aURLString];
-    NSURLRequest* aRequest = [NSMutableURLRequest requestWithURL:aURL];
+    NSMutableURLRequest* aRequest = [NSMutableURLRequest requestWithURL:aURL];
+    //[aRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
     NSURLConnection* connection = [[NSURLConnection alloc] initWithRequest:aRequest delegate:self startImmediately:YES];
 }
@@ -58,11 +59,19 @@ static RBDataModel* sharedInstance;
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    NSArray* resultArray = [NSJSONSerialization JSONObjectWithData:_responseData options:NSJSONReadingMutableContainers error:nil];
-    NSLog(@"result json = %@", resultArray);
+    NSError* aError;
     
-    _listArray = resultArray;
-    [_tableController.tableView reloadData];
+    
+    NSDictionary* resultDictionary = [NSJSONSerialization JSONObjectWithData:_responseData options:NSJSONReadingMutableContainers error:&aError];
+    
+    NSLog(@"result json = %@", resultDictionary);
+
+    //NSArray* resultArray = [resultDictionary objectForKey:@"boardAllData"];
+    //NSLog(@"result json = %@", resultArray);
+    //_listArray = resultArray;
+    //[_tableController.tableView reloadData];
+    
+    NSLog(@"Error : %@",aError);
 }
 
 - (NSDictionary*)getListDataAtIndex:(NSUInteger)index
@@ -111,19 +120,25 @@ static RBDataModel* sharedInstance;
 
 - (BOOL)authenticateID:(NSString*)userid withPassword:(NSString*)password
 {
-    NSString* aURLString = @"http://1.234.2.8/login.php";
-    NSString* aFormData = @"id=ios&passwd=ios";
     
-    aFormData = [NSString stringWithFormat:@"id=%@&passwd=%@", userid, password];
-    
-    NSURL *aURL = [NSURL URLWithString:aURLString];
-    NSMutableURLRequest* aRequest = [NSMutableURLRequest requestWithURL:aURL];
-    [aRequest setHTTPMethod:@"POST"];
-    [aRequest setHTTPBody:
-     [aFormData dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    NSHTTPURLResponse* aResponse;
+    //send
+    NSString* urlString = @"http://localhost:3080/login.json";
     NSError* aError;
+    NSDictionary* requestData = [[NSDictionary alloc]initWithObjectsAndKeys:
+                                 userid, @"ID", password, @"PW", nil];
+    NSData* postData = [NSJSONSerialization dataWithJSONObject:requestData options:0 error:&aError];
+    
+    
+    NSURL *aURL = [NSURL URLWithString:urlString];
+    NSMutableURLRequest* aRequest = [NSMutableURLRequest requestWithURL:aURL];
+    [aRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [aRequest setHTTPMethod:@"POST"];
+    [aRequest setHTTPBody:postData];
+    //send
+    
+    
+    //response
+    NSHTTPURLResponse* aResponse;
     NSData* aResultData = [NSURLConnection
                            sendSynchronousRequest:aRequest returningResponse:&aResponse
                            error:&aError];
@@ -131,6 +146,7 @@ static RBDataModel* sharedInstance;
     NSDictionary *dataArray = [NSJSONSerialization
                                JSONObjectWithData:aResultData
                                options:NSJSONReadingMutableContainers error:nil];
+    
     NSLog(@"login response = %d", aResponse.statusCode);
     NSLog(@"login result = %@", dataArray);
     NSLog(@"%@", [dataArray objectForKey:@"result"]);

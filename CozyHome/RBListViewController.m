@@ -89,8 +89,8 @@
     
     
     cell.cellTitle.text = [item objectForKey:@"title"];
-    cell.cellContent.text = [item objectForKey:@"content"];
-    [cell.cellImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"image"]]];
+    cell.cellContent.text = [item objectForKey:@"contents"];
+    [cell.cellImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"fileName"]]];
 
     return cell;
 }
