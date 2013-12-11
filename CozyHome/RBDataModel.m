@@ -15,7 +15,8 @@
 @implementation RBDataModel
 {
     NSMutableDictionary* _loginModel;
-    NSMutableArray* _listArray;
+    NSArray* _listArray;
+    NSMutableData* _responseData;
 }
 static RBDataModel* sharedInstance;
 
@@ -25,18 +26,43 @@ static RBDataModel* sharedInstance;
     if (self) {
         _loginModel = [[NSMutableDictionary alloc] initWithCapacity:3];
         
-        _listArray = [@[
-                        @{@"title":@"첫번째", @"content":@"첫번째 글", @"image":@"test1.png",
-                          @"comments": @[@"a_comment1",@"a_comment2",@"a_comment3"]},
-                        
-                        @{@"title":@"두번째", @"content":@"두번째 글" , @"image":@"test2.png",
-                          @"comments": @[@"b_comment1",@"b_comment2",@"b_comment3"]},
-                        
-                        @{@"title":@"마지막", @"content":@"세번째 글" ,  @"image":@"test3.png",
-                          @"comments": @[@"c_comment1",@"c_comment2",@"c_comment3"]},
-                        ]mutableCopy];
+//        _listArray = [@[
+//                        @{@"title":@"첫번째", @"content":@"첫번째 글", @"image":@"test1.png",
+//                          @"comments": @[@"a_comment1",@"a_comment2",@"a_comment3"]},
+//                        
+//                        @{@"title":@"두번째", @"content":@"두번째 글" , @"image":@"test2.png",
+//                          @"comments": @[@"b_comment1",@"b_comment2",@"b_comment3"]},
+//                        
+//                        @{@"title":@"마지막", @"content":@"세번째 글" ,  @"image":@"test3.png",
+//                          @"comments": @[@"c_comment1",@"c_comment2",@"c_comment3"]},
+//                        ]mutableCopy];
     }
     return self;
+}
+
+
+- (void)getBoardDataFromServer
+{
+    _responseData = [[NSMutableData alloc] initWithCapacity:10];
+    NSString *aURLString = @"http://1.234.2.8/board.php";
+    NSURL* aURL = [NSURL URLWithString:aURLString];
+    NSURLRequest* aRequest = [NSMutableURLRequest requestWithURL:aURL];
+    
+    NSURLConnection* connection = [[NSURLConnection alloc] initWithRequest:aRequest delegate:self startImmediately:YES];
+}
+
+- (void)connection:(NSURLConnection*)connection didReceiveData:(NSData *)data
+{
+    [_responseData appendData:data];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    NSArray* resultArray = [NSJSONSerialization JSONObjectWithData:_responseData options:NSJSONReadingMutableContainers error:nil];
+    NSLog(@"result json = %@", resultArray);
+    
+    _listArray = resultArray;
+    [_tableController.tableView reloadData];
 }
 
 - (NSDictionary*)getListDataAtIndex:(NSUInteger)index
@@ -61,6 +87,10 @@ static RBDataModel* sharedInstance;
     [ _loginModel setObject:userid forKey: LOGIN_ID_KEY];
     [ _loginModel setObject:password forKey: LOGIN_PW_KEY];
     [ _loginModel setObject:nickName forKey: LOGIN_NICKNAME_KEY];
+    
+    NSLog(@"id : %@", userid);
+    NSLog(@"id : %@", password);
+    
 }
 
 - (NSString*)loginDataDescription
@@ -76,6 +106,36 @@ static RBDataModel* sharedInstance;
     NSLog(@"savedPW : %@",savedPW);
     
     return ( [savedID isEqualToString:inputID] && [savedPW isEqualToString:inputPW] );
+}
+
+
+- (BOOL)authenticateID:(NSString*)userid withPassword:(NSString*)password
+{
+    NSString* aURLString = @"http://1.234.2.8/login.php";
+    NSString* aFormData = @"id=ios&passwd=ios";
+    
+    aFormData = [NSString stringWithFormat:@"id=%@&passwd=%@", userid, password];
+    
+    NSURL *aURL = [NSURL URLWithString:aURLString];
+    NSMutableURLRequest* aRequest = [NSMutableURLRequest requestWithURL:aURL];
+    [aRequest setHTTPMethod:@"POST"];
+    [aRequest setHTTPBody:
+     [aFormData dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NSHTTPURLResponse* aResponse;
+    NSError* aError;
+    NSData* aResultData = [NSURLConnection
+                           sendSynchronousRequest:aRequest returningResponse:&aResponse
+                           error:&aError];
+    
+    NSDictionary *dataArray = [NSJSONSerialization
+                               JSONObjectWithData:aResultData
+                               options:NSJSONReadingMutableContainers error:nil];
+    NSLog(@"login response = %d", aResponse.statusCode);
+    NSLog(@"login result = %@", dataArray);
+    NSLog(@"%@", [dataArray objectForKey:@"result"]);
+    
+    return ([[dataArray objectForKey:@"result"] isEqualToString:@"OK" ]);
 }
 
 

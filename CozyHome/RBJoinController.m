@@ -17,8 +17,12 @@
 - (IBAction)pressJoinBtn:(id)sender {
     
     if ( [self.password.text isEqual:self.passwordConfirm.text] ) {
-        [loginModel saveID:self.email.text withPassword:self.password.text withNickName:self.nickname.text];
-        [self.navigationController popToRootViewControllerAnimated:YES];
+        [loginModel saveID:self.email.text withPassword:self.password.text withNickName:self.nickname.text];  
+        
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Welcome" message:@"Join CozyHome. Congratulation." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Thank You", nil];
+//        [alert show];
+        
+        //[self dismissViewControllerAnimated:YES completion:nil];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Password Error" message:@" Password & PasswordConfirm is not same. Please check." delegate:self cancelButtonTitle:nil otherButtonTitles:@"OKAY", nil];
         [alert show];
@@ -31,7 +35,10 @@
 	// Do any additional setup after loading the view, typically from a nib.
     loginModel = [RBDataModel getInstance];
     
-    
+    /*원래 어떠한 controller에 component를 추가할 경우, 
+     delegete가 지정되어 있지 않다. 
+     
+     어떤 component에 액션을 지정해 주는 방법은 두가지인데, 첫번째는 ibaction과 같이 target을 직접 지정해주는 방법과, delegete를 연결해서 이용하는 방법이 있다.*/
     _email.delegate = self;
     _nickname.delegate = self;
     _password.delegate = self;

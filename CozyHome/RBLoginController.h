@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RBViewController : UIViewController
+@interface RBViewController : UIViewController<UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *inputID;
 @property (weak, nonatomic) IBOutlet UITextField *inputPW;
 @end

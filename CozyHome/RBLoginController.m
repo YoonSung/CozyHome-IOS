@@ -9,33 +9,94 @@
 #import "RBLoginController.h"
 #import "RBDataModel.h"
 
-@interface RBViewController ()
-
+@interface RBViewController () //원래는 (이름)을 쓰는식으로 했었다ㅎ
+//implement {} 와 동일한 기능, objective c의 category라는 인터페이스 재정의 기능이다.
 @end
 
 @implementation RBViewController
 {
     RBDataModel* loginModel;
+    BOOL isKeyboardAppear;
 }
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    //for keyboard hidden in login process
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTap:)];
-    [self.view addGestureRecognizer:tap];
-    //**************
     loginModel = [RBDataModel getInstance];
+    
+    _inputID.delegate = self;
+    _inputPW.delegate = self;
+    
+    _inputID.returnKeyType = UIReturnKeyNext;
+    _inputPW.returnKeyType = UIReturnKeyDone;
+    
+    [self.navigationController setNavigationBarHidden:true];
+    //http://b4you.net/blog/tag/resignFirstResponder
+    
+    //[_inputID becomeFirstResponder];
+    [_inputID resignFirstResponder];
+    [_inputPW resignFirstResponder];
+
 }
 
-    //for keyboard hidden in login process
-- (void)didTap:(UITapGestureRecognizer*)rec
+-(void) viewWillAppear:(BOOL)animated
 {
-    [self.inputID resignFirstResponder];
-    [self.inputPW resignFirstResponder];
+    [self.navigationController setNavigationBarHidden:true];
 }
-    //**************
+
+-(void) textFieldDidBeginEditing:(UITextField *)textField
+{
+    //http://stackoverflow.com/questions/13345167/how-to-move-view-up-when-click-on-uitextfield-in-customcell-of-uitableview
+    NSLog(@"keyboard appear");
+    
+    if ( isKeyboardAppear == NO ) {
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDelegate:self];
+        [UIView setAnimationDuration:0.5];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y-165.0,
+                                 self.view.frame.size.width, self.view.frame.size.height);
+    }
+}
+
+
+-(void) textFieldDidEndEditing:(UITextField *)textField
+{
+    
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDelegate:self];
+    [UIView setAnimationDuration:0.5];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    self.view .frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+165.0,
+                                  self.view.frame.size.width, self.view.frame.size.height);
+}
+
+-(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [self.view endEditing:YES];
+}
+// ANOTHER SOLUTION TAP ACTION CONTROLLER
+//- (void)viewDidLoad
+//{
+//    [super viewDidLoad];
+//    //for keyboard hidden in login process
+//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTap:)];
+//    [self.view addGestureRecognizer:tap];
+//    [self.navigationController setNavigationBarHidden:YES];
+//    
+//    //**************
+//
+//}
+//
+//    //for keyboard hidden in login process
+//- (void)didTap:(UITapGestureRecognizer*)rec
+//{
+//    [self.inputID resignFirstResponder];
+//    [self.inputPW resignFirstResponder];
+//}
+//    //**************
 
 - (void)didReceiveMemoryWarning
 {
@@ -43,14 +104,16 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    //[self performSegueWithIdentifier:@"moveList" sender:self];
-}
-
 - (BOOL)loginCheck
 {
-    if ( [loginModel isValidLoginID:self.inputID.text AndPassword:self.inputPW.text] )
+    
+    
+//    NSLog(@"%hhd", [loginModel isValidLoginID:self.inputID.text AndPassword:self.inputPW.text]);
+    //if ( [loginModel isValidLoginID:self.inputID.text AndPassword:self.inputPW.text] )
+    NSLog(@"login id : %@", self.inputID.text);
+    NSLog(@"loing pw : %@", self.inputPW.text);
+    
+    if ( [loginModel authenticateID:self.inputID.text withPassword:self.inputPW.text] )
     {
         return true;
     }
@@ -72,6 +135,6 @@
 
 -(IBAction)returned:(UIStoryboardSegue*)segue
 {
-    NSLog(@"return");
+    NSLog(@"return Login Page");
 }
 @end
