@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CLImageEditor.h"
 
-@interface RBListViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate>
+@interface RBListViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, CLImageEditorDelegate>
 @end

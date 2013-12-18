@@ -17,6 +17,7 @@
     NSMutableDictionary* _loginModel;
     NSArray* _listArray;
     NSMutableData* _responseData;
+    NSURLConnection* connection;
 }
 static RBDataModel* sharedInstance;
 
@@ -49,7 +50,7 @@ static RBDataModel* sharedInstance;
     NSMutableURLRequest* aRequest = [NSMutableURLRequest requestWithURL:aURL];
     //[aRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
-    NSURLConnection* connection = [[NSURLConnection alloc] initWithRequest:aRequest delegate:self startImmediately:YES];
+    connection = [[NSURLConnection alloc] initWithRequest:aRequest delegate:self startImmediately:YES];
 }
 
 - (void)connection:(NSURLConnection*)connection didReceiveData:(NSData *)data
@@ -61,15 +62,16 @@ static RBDataModel* sharedInstance;
 {
     NSError* aError;
     
-    
+    NSString *result = [NSString stringWithUTF8String:_responseData.bytes];
+    NSLog(@"result data = %@", result);
     NSDictionary* resultDictionary = [NSJSONSerialization JSONObjectWithData:_responseData options:NSJSONReadingMutableContainers error:&aError];
     
     NSLog(@"result json = %@", resultDictionary);
 
-    //NSArray* resultArray = [resultDictionary objectForKey:@"boardAllData"];
-    //NSLog(@"result json = %@", resultArray);
-    //_listArray = resultArray;
-    //[_tableController.tableView reloadData];
+    NSArray* resultArray = [resultDictionary objectForKey:@"boardAllData"];
+    NSLog(@"result json = %@", resultArray);
+    _listArray = resultArray;
+    [_tableController.tableView reloadData];
     
     NSLog(@"Error : %@",aError);
 }

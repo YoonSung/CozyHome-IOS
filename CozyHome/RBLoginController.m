@@ -45,33 +45,74 @@
     [self.navigationController setNavigationBarHidden:true];
 }
 
--(void) textFieldDidBeginEditing:(UITextField *)textField
+-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-    //http://stackoverflow.com/questions/13345167/how-to-move-view-up-when-click-on-uitextfield-in-customcell-of-uitableview
-    NSLog(@"keyboard appear");
-    
-    if ( isKeyboardAppear == NO ) {
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDelegate:self];
-        [UIView setAnimationDuration:0.5];
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y-165.0,
-                                 self.view.frame.size.width, self.view.frame.size.height);
-    }
-}
-
-
--(void) textFieldDidEndEditing:(UITextField *)textField
-{
-    
-    
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDelegate:self];
+    [UIView beginAnimations:@"MyAnimation" context:nil];
     [UIView setAnimationDuration:0.5];
-    [UIView setAnimationBeginsFromCurrentState:YES];
-    self.view .frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+165.0,
-                                  self.view.frame.size.width, self.view.frame.size.height);
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+    
+    
+    CGRect newframe = self.view.frame;
+    
+    if ( textField == _inputID)
+    {
+        newframe.origin.y = -120;
+    }
+    else if ( textField == _inputPW )
+    {
+        newframe.origin.y = -150;
+    }
+    self.view.frame = newframe;
+    
+    //self.view.alpha
+    //self.view.backgroundColor = [UIColor whiteColor];
+    [UIView commitAnimations];
+    
+    return YES;
 }
+
+-(BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    [UIView beginAnimations:@"MyAnimation" context:nil];
+    [UIView setAnimationDuration:0.5];
+//    [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
+    
+    CGRect newframe = self.view.frame;
+    newframe.origin.y = 0;
+    self.view.frame = newframe;
+    
+    [UIView commitAnimations];
+    
+    return YES;
+}
+
+//-(void) textFieldDidBeginEditing:(UITextField *)textField
+//{
+//    //http://stackoverflow.com/questions/13345167/how-to-move-view-up-when-click-on-uitextfield-in-customcell-of-uitableview
+//    NSLog(@"keyboard appear");
+//    
+//    if ( isKeyboardAppear == NO ) {
+//        [UIView beginAnimations:nil context:NULL];
+//        [UIView setAnimationDelegate:self];
+//        [UIView setAnimationDuration:0.5];
+//        [UIView setAnimationBeginsFromCurrentState:YES];
+//        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y-165.0,
+//                                 self.view.frame.size.width, self.view.frame.size.height);
+//    }
+//}
+//
+//
+//-(void) textFieldDidEndEditing:(UITextField *)textField
+//{
+//    
+//    
+//    [UIView beginAnimations:nil context:NULL];
+//    [UIView setAnimationDelegate:self];
+//    [UIView setAnimationDuration:0.5];
+//    [UIView setAnimationBeginsFromCurrentState:YES];
+//    self.view .frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+165.0,
+//                                  self.view.frame.size.width, self.view.frame.size.height);
+//}
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {

@@ -241,6 +241,51 @@
             </objects>
             <point key="canvasLocation" x="688" y="790"/>
         </scene>
+        <!--Write View Controller-->
+        <scene sceneID="Vgm-7H-zEg">
+            <objects>
+                <viewController storyboardIdentifier="writeView" id="ItX-3B-OfU" customClass="RBWriteViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Ey4-XG-zdV"/>
+                        <viewControllerLayoutGuide type="bottom" id="idW-hI-lRv"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="4cv-eo-iPL">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cjZ-fJ-BdE">
+                                <rect key="frame" x="47" y="93" width="227" height="251"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="새글쓰기" translatesAutoresizingMaskIntoConstraints="NO" id="jfG-EV-tpc">
+                                <rect key="frame" x="47" y="363" width="227" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aXX-zl-wjy">
+                                <rect key="frame" x="119" y="493" width="83" height="39"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="전송하기">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onSendClick:" destination="ItX-3B-OfU" eventType="touchUpInside" id="urg-NJ-q4t"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="writeImageView" destination="cjZ-fJ-BdE" id="W0I-7l-0ku"/>
+                        <outlet property="writeTextView" destination="jfG-EV-tpc" id="PQ6-7b-nks"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Tgx-f1-dIO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1048" y="790"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="gXF-Nh-LfR">
             <objects>

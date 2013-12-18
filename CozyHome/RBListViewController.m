@@ -5,12 +5,13 @@
 //  Created by JungYoonSung on 2013. 11. 27..
 //  Copyright (c) 2013년 nhnnext. All rights reserved.
 //
-
+#import <MobileCoreServices/MobileCoreServices.h>
 #import "RBListViewController.h"
 #import "RBCommentController.h"
 #import "RBDataModel.h"
 #import "RBTableViewCell.h"
 #import "UIImageView+WebCache.h"
+#import "RBWriteViewController.h"
 
 @interface RBListViewController ()
 
@@ -41,12 +42,64 @@
     _model.tableController = self;
     [_model getBoardDataFromServer];
     //NSLog(@"viewDidLoad in RBListViewController");
+    
+    
+    [self.navigationController setNavigationBarHidden:NO];
+    UIBarButtonItem * rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(newImage:)];
+    self.navigationItem.rightBarButtonItem = rightButton;
 }
 
+//sender는 호출한 객체가 들어있다.
+- (void)newImage:(id)sender
+{
+    UIImagePickerController *picker
+    = [[UIImagePickerController alloc] init];
+    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    picker.delegate = self;
+    [self.navigationController
+     presentViewController:picker animated:YES completion:^{}];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker
+didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
+    
+    if ([mediaType isEqualToString:(__bridge id)kUTTypeImage])
+    {
+        UIImage* aImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+       
+        //editor 소스추가 부분
+        CLImageEditor *editor = [[CLImageEditor alloc] initWithImage:aImage];
+        editor.delegate = self;
+        [picker pushViewController:editor animated:YES];
+        //editor 소스추가 부분 끝
+    }
+    //이미지 골랐을때 자동으로 뷰 닫기. 여기도 {} 안에 액션을 구현하면 뷰가 닫힌후 {}안에 영역이 실행된다.
+//    [picker dismissViewControllerAnimated:YES completion:^{
+//        UIAlertView *alertView1 = [[UIAlertView alloc] initWithTitle:@"이미지" message:@"골랐어요" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+//        alertView1.alertViewStyle = UIAlertViewStyleDefault;
+//        [alertView1 show];
+//    }];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:^{}]; //^{}는 콜백함수. ananimous함수로 뷰가 끝난뒤 실행할 부분을 구현한다.
+}
+
+- (void)imageEditor:(CLImageEditor *)editor didFinishEdittingWithImage:(UIImage *)image
+{
+    RBWriteViewController* writeVC = [self.storyboard instantiateViewControllerWithIdentifier:@"writeView"];
+    [writeVC prepareData:image];
+    [editor dismissViewControllerAnimated:NO completion:nil];
+    [self.navigationController pushViewController:writeVC animated:NO];
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [self.navigationController setNavigationBarHidden:YES];
+    //[self.navigationController setNavigationBarHidden:YES];
+    [self.navigationController setNavigationBarHidden:NO];
 }
 
 - (void)didReceiveMemoryWarning
@@ -90,7 +143,17 @@
     
     cell.cellTitle.text = [item objectForKey:@"title"];
     cell.cellContent.text = [item objectForKey:@"contents"];
-    [cell.cellImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"fileName"]]];
+    NSString* imgUrl = [item objectForKey:@"fileName"];
+    
+    if ( [imgUrl class] != [NSNull class] )
+    {
+        NSString* loadURL = @"http://localhost:3080/images/";
+        loadURL = [loadURL stringByAppendingString:imgUrl];
+        
+        [cell.cellImage setImageWithURL:[NSURL URLWithString:loadURL]];
+        NSLog(@"imgURL = %@", imgUrl);
+        NSLog(@"loadURL = %@", loadURL);
+    }
 
     return cell;
 }
