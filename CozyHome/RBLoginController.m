@@ -147,12 +147,11 @@
 
 - (BOOL)loginCheck
 {
-    
-    
 //    NSLog(@"%hhd", [loginModel isValidLoginID:self.inputID.text AndPassword:self.inputPW.text]);
     //if ( [loginModel isValidLoginID:self.inputID.text AndPassword:self.inputPW.text] )
     NSLog(@"login id : %@", self.inputID.text);
     NSLog(@"loing pw : %@", self.inputPW.text);
+    
     
     if ( [loginModel authenticateID:self.inputID.text withPassword:self.inputPW.text] )
     {
@@ -160,7 +159,7 @@
     }
     else
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Wait" message:@"Check Input Data." delegate:self cancelButtonTitle:nil otherButtonTitles:@"OKAY", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Wait" message:@"Is not Valid ID&PW. Check Input Data." delegate:self cancelButtonTitle:nil otherButtonTitles:@"OKAY", nil];
         [alert show];
         return false;
     }
@@ -169,7 +168,12 @@
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
     if ([identifier isEqualToString:@"Login"]) {
-        return [self loginCheck];
+        if ( self.inputID.text.length == 0 || self.inputPW.text.length == 0) {                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Empty!" message:@"You did not fill login form" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OKAY", nil];
+            [alert show];
+            return false;
+        } else {
+            return [self loginCheck];
+        }
     }
     return true;
 }

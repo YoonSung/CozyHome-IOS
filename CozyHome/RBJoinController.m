@@ -16,6 +16,17 @@
 
 - (IBAction)pressJoinBtn:(id)sender {
     
+    if ( _email.text.length == 0    ||
+         _nickname.text.length == 0 ||
+         _password.text.length == 0 ||
+         _passwordConfirm.text.length == 0 ) {
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Empty!" message:@"You Must Fill All of Form" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OKAY", nil];
+        [alert show];
+        return;
+    }
+    
+    
     if ( [self.password.text isEqual:self.passwordConfirm.text] ) {
         [loginModel saveID:self.email.text withPassword:self.password.text withNickName:self.nickname.text];  
         

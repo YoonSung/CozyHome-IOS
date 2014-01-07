@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RBWriteViewController : UIViewController
+@interface RBWriteViewController : UIViewController<UITextViewDelegate>
 {
     UIImage* _internalImage;
 }

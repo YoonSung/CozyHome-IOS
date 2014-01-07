@@ -17,5 +17,6 @@
 - (NSDictionary*)getListDataAtIndex:(NSUInteger)index;
 - (BOOL)authenticateID:(NSString*)userid withPassword:(NSString*)password;
 - (void)getBoardDataFromServer;
+- (BOOL)UploadNewPostTitle:(NSString*)title WithContent:(NSString*)content WithImage:(UIImage*)image;
 @property UITableViewController* tableController;
 @end

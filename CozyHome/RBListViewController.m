@@ -21,6 +21,8 @@
 {
     RBDataModel* _model;
     NSInteger index;
+    RBTableViewCell *cell;
+    NSDictionary* item;
 }
 
 
@@ -40,7 +42,7 @@
     
     _model = [RBDataModel getInstance];
     _model.tableController = self;
-    [_model getBoardDataFromServer];
+    //[_model getBoardDataFromServer];
     //NSLog(@"viewDidLoad in RBListViewController");
     
     
@@ -96,10 +98,12 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     [self.navigationController pushViewController:writeVC animated:NO];
 }
 
-- (void)viewWillAppear:(BOOL)animated
+-(void) viewWillAppear:(BOOL)animated
 {
     //[self.navigationController setNavigationBarHidden:YES];
+    NSLog(@"in willAppear");
     [self.navigationController setNavigationBarHidden:NO];
+    [_model getBoardDataFromServer];
 }
 
 - (void)didReceiveMemoryWarning
@@ -119,14 +123,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     NSLog(@"cellForRowAtIndexPath Execute");
     
-    NSDictionary* item = [_model getListDataAtIndex:indexPath.row];
+    item = [_model getListDataAtIndex:indexPath.row];
     
     //UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
     //    cell.textLabel.text = [item objectForKey:@"title"];
     //    cell.detailTextLabel.text = [item objectForKey:@"content"];
     //    cell.imageView.image = [UIImage imageNamed: [item objectForKey:@"image"]];
     
-    RBTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"dynamicCell"];
+    cell = [tableView dequeueReusableCellWithIdentifier:@"dynamicCell"];
     
 
     //local
@@ -143,6 +147,17 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     
     cell.cellTitle.text = [item objectForKey:@"title"];
     cell.cellContent.text = [item objectForKey:@"contents"];
+    
+    NSArray* comments = [item objectForKey:@"comments"];
+    NSInteger commentsNum = [comments count];
+    
+    if ( commentsNum == 0 )
+    {
+        cell.cellCommentNum.text = @"";
+    } else {
+        cell.cellCommentNum.text = [NSString stringWithFormat:@"댓글 : %d 개", commentsNum];
+    }
+    
     NSString* imgUrl = [item objectForKey:@"fileName"];
     
     if ( [imgUrl class] != [NSNull class] )
@@ -159,9 +174,17 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    index = indexPath.row;
-    //http://stackoverflow.com/questions/9176215/understanding-performseguewithidentifier
-    [self performSegueWithIdentifier:@"Comments" sender:indexPath];
+    NSArray* comments = [item objectForKey:@"comments"];
+    NSInteger commentsNum = [comments count];
+    
+    if ( commentsNum == 0 ) {
+        NSLog(@"댓글이 없어서 다음으로 안넘어가요ㅎ");
+    } else {
+        index = indexPath.row;
+        //http://stackoverflow.com/questions/9176215/understanding-performseguewithidentifier
+        [self performSegueWithIdentifier:@"Comments" sender:indexPath];
+    }
+
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

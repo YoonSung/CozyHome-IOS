@@ -153,8 +153,118 @@ static RBDataModel* sharedInstance;
     NSLog(@"login result = %@", dataArray);
     NSLog(@"%@", [dataArray objectForKey:@"result"]);
     
-    return ([[dataArray objectForKey:@"result"] isEqualToString:@"OK" ]);
+    if ( [[dataArray objectForKey:@"result"] isEqualToString:@"OK" ] ) {
+        [self saveID:userid withPassword:password withNickName:[dataArray objectForKey:@"nickname"]];
+        return true;
+    }
+    
+    return false;
 }
 
+- (BOOL)UploadNewPostTitle:(NSString*)title WithContent:(NSString*)content WithImage:(UIImage*)image
+{
+    NSURL* url = [NSURL URLWithString:@"http://localhost:3080/board/newPost"];//newPost"];
+    
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url
+                                                        cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30.0];
+    
+    [request setHTTPMethod:@"POST"];
+    NSString* stringBoundary = @"--*****";
+    
+    // header value
+    NSString* headerBoundary = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", stringBoundary];
+    
+    // set header
+    [request addValue:headerBoundary forHTTPHeaderField:@"Content-Type"];
+    
+    //add body
+    NSMutableData *postBody = [NSMutableData data];
+    NSLog(@"body made");
+    
+    //access token - 미구현
+    
+    //제목-title
+    [postBody appendData:[[NSString stringWithFormat:@"--%@\r\n", stringBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[@"Content-Disposition: form-data; name=\"title\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[title dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    //내용-content
+    [postBody appendData:[[NSString stringWithFormat:@"--%@\r\n", stringBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[@"Content-Disposition: form-data; name=\"contents\"\r\n\r\n"dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[content dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    //닉네임-nickname
+    NSString* nickName = [_loginModel objectForKey:LOGIN_NICKNAME_KEY];
+    NSLog(@"nickName : %@\n", nickName);
+    [postBody appendData:[[NSString stringWithFormat:@"--%@\r\n", stringBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[@"Content-Disposition: form-data; name=\"writer\"\r\n\r\n"dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[nickName dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    
+    //이미지-image
+    NSDate *date = [NSDate date];
+    //NSLog(@"Time: %lli", [@(floor([date timeIntervalSince1970])) longLongValue]);
+    NSString* fileName = [NSString stringWithFormat:@"%@_%lli.jpg",
+                          [_loginModel objectForKey:LOGIN_ID_KEY],
+                          [@(floor([date timeIntervalSince1970])) longLongValue]
+                          ];
+    //lvev9925@naver.com_1366057691.png
+    //(id + epoch time).png
+    
+    [postBody appendData:[[NSString stringWithFormat:@"--%@\r\n", stringBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:
+                           @"Content-Disposition: form-data; name=\"file\"; filename=\"%@\"\r\n", fileName] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[@"Content-Type: image/jpeg\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[@"Content-Transfer-Encoding: binary\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+   
+    NSData *imgData = UIImageJPEGRepresentation(image, 1.0);
+    // add it to body
+    [postBody appendData:imgData];
+    [postBody appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NSLog(@"message added");
+    // final boundary
+    [postBody appendData:[[NSString stringWithFormat:@"--%@--\r\n", stringBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // add body to post
+    [request setHTTPBody:postBody];
+    
+    
+    
+    NSLog(@"body set");
+    
+    
+    //response
+    NSError* error;
+    NSHTTPURLResponse* response;
+    NSData* aResultData = [NSURLConnection
+                           sendSynchronousRequest:request returningResponse:&response
+                           error:&error];
+    
+    NSDictionary *dataArray = [NSJSONSerialization
+                               JSONObjectWithData:aResultData
+                               options:NSJSONReadingMutableContainers error:nil];
+
+    
+    if (error) {
+        //NSLog(@"EROROROROROROR: %@", error);
+    }
+    NSLog(@"just 3");
+    
+    
+    NSLog(@"upload NewPost response = %d", response.statusCode);
+    NSLog(@"upload NewPost result = %@", dataArray);
+    NSLog(@"%@", [dataArray objectForKey:@"result"]);
+
+    NSLog(@"done");
+    if ( [[dataArray objectForKey:@"result"] isEqualToString:@"OK" ] ) {
+        return YES;
+    }
+    
+    return FALSE;
+}
 
 @end
