@@ -49,6 +49,7 @@
     [self.navigationController setNavigationBarHidden:NO];
     UIBarButtonItem * rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(newImage:)];
     self.navigationItem.rightBarButtonItem = rightButton;
+    self.navigationItem.hidesBackButton = YES;
 }
 
 //sender는 호출한 객체가 들어있다.
@@ -104,6 +105,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     NSLog(@"in willAppear");
     [self.navigationController setNavigationBarHidden:NO];
     [_model getBoardDataFromServer];
+    self.navigationItem.hidesBackButton = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -147,6 +149,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     
     cell.cellTitle.text = [item objectForKey:@"title"];
     cell.cellContent.text = [item objectForKey:@"contents"];
+    cell.cellWriter.text = [item objectForKey:@"writer"];
     
     NSArray* comments = [item objectForKey:@"comments"];
     NSInteger commentsNum = [comments count];

@@ -13,6 +13,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *cellImage;
 @property (weak, nonatomic) IBOutlet UILabel *cellContent;
 @property (weak, nonatomic) IBOutlet UILabel *cellCommentNum;
+@property (weak, nonatomic) IBOutlet UILabel *cellWriter;
 
 
 //cellCommentNum;

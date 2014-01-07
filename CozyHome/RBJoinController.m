@@ -64,6 +64,72 @@
     [_nickname resignFirstResponder];
     [_password resignFirstResponder];
     [_passwordConfirm resignFirstResponder];
+    
+    _password.secureTextEntry = YES;
+    _passwordConfirm.secureTextEntry = YES;
+}
+
+
+-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    NSLog(@"should begin");
+    
+    [UIView beginAnimations:@"MyAnimation" context:nil];
+    [UIView setAnimationDuration:0.5];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+    
+    
+    CGRect newframe = self.view.frame;
+    
+    if ( textField == _password)
+    {
+        newframe.origin.y = -30;
+    }
+    else if ( textField == _passwordConfirm )
+    {
+        newframe.origin.y = -80;
+    }
+    self.view.frame = newframe;
+    
+    //self.view.alpha
+    //self.view.backgroundColor = [UIColor whiteColor];
+    [UIView commitAnimations];
+    
+    return YES;
+}
+
+-(void) textFieldDidBeginEditing:(UITextField *)textField
+{
+    NSLog(@"did begin");
+    
+    CGRect newframe = self.view.frame;
+    
+    if ( textField == _password)
+    {
+        newframe.origin.y = -30;
+    }
+    else if ( textField == _passwordConfirm )
+    {
+        newframe.origin.y = -150;
+    }
+    self.view.frame = newframe;
+}
+
+-(BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    NSLog(@"should end");
+    
+    [UIView beginAnimations:@"MyAnimation" context:nil];
+    [UIView setAnimationDuration:0.5];
+    //    [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
+    
+    CGRect newframe = self.view.frame;
+    newframe.origin.y = 0;
+    self.view.frame = newframe;
+    
+    [UIView commitAnimations];
+    
+    return YES;
 }
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event

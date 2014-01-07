@@ -38,6 +38,9 @@
     [_inputID resignFirstResponder];
     [_inputPW resignFirstResponder];
 
+    
+    //for password
+    _inputPW.secureTextEntry = YES;
 }
 
 -(void) viewWillAppear:(BOOL)animated
@@ -47,6 +50,8 @@
 
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
+    NSLog(@"should begin");
+    
     [UIView beginAnimations:@"MyAnimation" context:nil];
     [UIView setAnimationDuration:0.5];
     [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
@@ -71,8 +76,46 @@
     return YES;
 }
 
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    NSLog(@"should return");
+    
+    return NO;
+}
+
+-(void) textFieldDidEndEditing:(UITextField *)textField
+{
+    NSLog(@"did end");
+}
+
+-(void) textFieldDidBeginEditing:(UITextField *)textField
+{
+    NSLog(@"did begin");
+    
+    CGRect newframe = self.view.frame;
+    
+    if ( textField == _inputID)
+    {
+        newframe.origin.y = -120;
+    }
+    else if ( textField == _inputPW )
+    {
+        newframe.origin.y = -150;
+    }
+    self.view.frame = newframe;
+}
+
+-(BOOL)textFieldShouldClear:(UITextField *)textField
+{
+    NSLog(@"should clear");
+    
+    return NO;
+}
+
 -(BOOL)textFieldShouldEndEditing:(UITextField *)textField
 {
+    NSLog(@"should end");
+    
     [UIView beginAnimations:@"MyAnimation" context:nil];
     [UIView setAnimationDuration:0.5];
 //    [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
