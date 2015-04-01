@@ -94,7 +94,7 @@
                                                     </attributes>
                                                 </fragment>
                                             </attributedString>
-                                            <color key="highlightedColor" patternImage="E8802335-15A8-4459-B9FD-393AAD3A7116" colorSpace="pattern"/>
+                                            <color key="highlightedColor" patternImage="58631406-0A9F-434D-BD0E-E91CCD50A8B7" colorSpace="pattern"/>
                                             <color key="shadowColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eIM-kI-1lj">
@@ -343,7 +343,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="E8802335-15A8-4459-B9FD-393AAD3A7116" width="256" height="256">
+        <image name="58631406-0A9F-434D-BD0E-E91CCD50A8B7" width="256" height="256">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPj9YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQsLzI4O1UkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw

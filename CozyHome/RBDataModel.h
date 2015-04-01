@@ -18,5 +18,7 @@
 - (BOOL)authenticateID:(NSString*)userid withPassword:(NSString*)password;
 - (void)getBoardDataFromServer;
 - (BOOL)UploadNewPostTitle:(NSString*)title WithContent:(NSString*)content WithImage:(UIImage*)image;
+- (BOOL)UploadNewCommentPostNum:(NSString*)postID WithComment:(NSString*)comment;
 @property UITableViewController* tableController;
+@property UITableViewController* commentController;
 @end

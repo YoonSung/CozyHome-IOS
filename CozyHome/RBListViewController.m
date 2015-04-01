@@ -180,13 +180,13 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     NSArray* comments = [item objectForKey:@"comments"];
     NSInteger commentsNum = [comments count];
     
-    if ( commentsNum == 0 ) {
-        NSLog(@"댓글이 없어서 다음으로 안넘어가요ㅎ");
-    } else {
+    //if ( commentsNum == 0 ) {
+    //    NSLog(@"댓글이 없어서 다음으로 안넘어가요ㅎ");
+    //} else {
         index = indexPath.row;
         //http://stackoverflow.com/questions/9176215/understanding-performseguewithidentifier
         [self performSegueWithIdentifier:@"Comments" sender:indexPath];
-    }
+    //}
 
 }
 

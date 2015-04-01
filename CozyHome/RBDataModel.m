@@ -70,9 +70,10 @@ static RBDataModel* sharedInstance;
 
     NSArray* resultArray = [resultDictionary objectForKey:@"boardAllData"];
     NSLog(@"result json = %@", resultArray);
+    
     _listArray = resultArray;
     [_tableController.tableView reloadData];
-    
+    [_commentController.tableView reloadData];
     NSLog(@"Error : %@",aError);
 }
 
@@ -100,7 +101,8 @@ static RBDataModel* sharedInstance;
     [ _loginModel setObject:nickName forKey: LOGIN_NICKNAME_KEY];
     
     NSLog(@"id : %@", userid);
-    NSLog(@"id : %@", password);
+    NSLog(@"pw : %@", password);
+    
     
 }
 
@@ -267,4 +269,43 @@ static RBDataModel* sharedInstance;
     return FALSE;
 }
 
+- (BOOL)UploadNewCommentPostNum:(NSString*)postID WithComment:(NSString*)comment
+{
+    
+    //send
+    NSString* urlString = [NSString stringWithFormat:@"http://localhost:3080/board/comment/json/ios/%@",postID];
+    NSError* aError;
+    NSDictionary* requestData = [[NSDictionary alloc]initWithObjectsAndKeys:
+                                 comment, @"CMT", nil];
+    NSData* postData = [NSJSONSerialization dataWithJSONObject:requestData options:0 error:&aError];
+    
+    
+    NSURL *aURL = [NSURL URLWithString:urlString];
+    NSMutableURLRequest* aRequest = [NSMutableURLRequest requestWithURL:aURL];
+    [aRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [aRequest setHTTPMethod:@"POST"];
+    [aRequest setHTTPBody:postData];
+    //send
+    
+    
+    //response
+    NSHTTPURLResponse* aResponse;
+    NSData* aResultData = [NSURLConnection
+                           sendSynchronousRequest:aRequest returningResponse:&aResponse
+                           error:&aError];
+    
+    NSDictionary *dataArray = [NSJSONSerialization
+                               JSONObjectWithData:aResultData
+                               options:NSJSONReadingMutableContainers error:nil];
+    
+    NSLog(@"login response = %d", aResponse.statusCode);
+    NSLog(@"login result = %@", dataArray);
+    NSLog(@"%@", [dataArray objectForKey:@"result"]);
+    
+    if ( [[dataArray objectForKey:@"result"] isEqualToString:@"OK" ] ) {
+        return true;
+    }
+    
+    return false;
+}
 @end

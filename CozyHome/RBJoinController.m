@@ -30,10 +30,12 @@
     if ( [self.password.text isEqual:self.passwordConfirm.text] ) {
         [loginModel saveID:self.email.text withPassword:self.password.text withNickName:self.nickname.text];  
         
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Welcome" message:@"Join CozyHome. Congratulation." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Thank You", nil];
-//        [alert show];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Welcome" message:@"Join CozyHome. Congratulation." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Thank You", nil];
+        [alert show];
         
-        //[self dismissViewControllerAnimated:YES completion:nil];
+        
+        [loginModel saveID:_email.text withPassword:_password.text withNickName:_nickname.text];
+        [self dismissViewControllerAnimated:YES completion:nil];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Password Error" message:@" Password & PasswordConfirm is not same. Please check." delegate:self cancelButtonTitle:nil otherButtonTitles:@"OKAY", nil];
         [alert show];
